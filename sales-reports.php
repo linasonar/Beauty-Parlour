@@ -2,26 +2,17 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+if (strlen($_SESSION['bpmsaid']==0)) {
+  header('location:logout.php');
+  } else{
 
-if(isset($_POST['login']))
-  {
-    $adminuser=$_POST['username'];
-    $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
-    $ret=mysqli_fetch_array($query);
-    if($ret>0){
-      $_SESSION['bpmsaid']=$ret['ID'];
-     header('location:dashboard.php');
-    }
-    else{
-    $msg="Invalid Details.";
-    }
-  }
+  
+
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Soni | Login Page </title>
+<title>BPMS |  Sales Reports</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -53,45 +44,44 @@ if(isset($_POST['login']))
 </head> 
 <body class="cbp-spmenu-push">
 	<div class="main-content">
-		
+		<!--left-fixed -navigation-->
+		 <?php include_once('includes/sidebar.php');?>
+		<!--left-fixed -navigation-->
+		<!-- header-starts -->
+	 <?php include_once('includes/header.php');?>
+		<!-- //header-ends -->
 		<!-- main content start-->
-		<div style="background-color: #F1F1F1; height:800px;">
-			<div class="main-page login-page ">
-				<h3 class="title1">SignIn Page</h3>
-				<div class="widget-shadow">
-					<div class="login-top">
-						<h4>Welcome back to Soni AdminPanel ! </h4>
-					</div>
-					<div class="login-body">
-						<form role="form" method="post" action="">
-							<p style="font-size:16px; color:red" align="center"> <?php if($msg){
+		<div id="page-wrapper">
+			<div class="main-page">
+				<div class="forms">
+					<h3 class="title1">Sales reports</h3>
+					<div class="form-grids row widget-shadow" data-example-id="basic-forms"> 
+						<div class="form-title">
+							<h4>Sales reports:</h4>
+						</div>
+						<div class="form-body">
+							<form method="post" name="bwdatesreport"  action="sales-reports-detail.php" enctype="multipart/form-data">
+								<p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
-							<input type="text" class="user" name="username" placeholder="Username" required="true">
-							<input type="password" name="password" class="lock" placeholder="Password" required="true">
-							<input type="submit" name="login" value="Sign In">
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="../index.php">Back to Home</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="forgot-password.php">forgot password?</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-						</form>
+
+  
+							 <div class="form-group"> <label for="exampleInputEmail1">From Date</label> <input type="date" class="form-control1" name="fromdate" id="fromdate" value="" required='true'> </div> 
+							 <div class="form-group"> <label for="exampleInputPassword1">To Date</label><input type="date" class="form-control1" name="todate" id="todate" value="" required='true'> </div>
+							 <div class="form-group"> <label for="exampleInputPassword1">Request Type</label><input type="radio" name="requesttype" value="mtwise" checked="true">Month wise
+                  <input type="radio" name="requesttype" value="yrwise">Year wise </div>
+							 
+							
+							
+							  <button type="submit" name="submit" class="btn btn-default">Submit</button> </form> 
+						</div>
+						
 					</div>
-				</div>
 				
 				
 			</div>
 		</div>
-		
+		 <?php include_once('includes/footer.php');?>
 	</div>
 	<!-- Classie -->
 		<script src="js/classie.js"></script>
@@ -121,3 +111,4 @@ if(isset($_POST['login']))
    <script src="js/bootstrap.js"> </script>
 </body>
 </html>
+<?php } ?>

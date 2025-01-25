@@ -3,25 +3,27 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 
-if(isset($_POST['login']))
+if(isset($_POST['submit']))
   {
-    $adminuser=$_POST['username'];
-    $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
+    $contactno=$_POST['contactno'];
+    $email=$_POST['email'];
+
+        $query=mysqli_query($con,"select ID from tbladmin where  Email='$email' and MobileNumber='$contactno' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
-      $_SESSION['bpmsaid']=$ret['ID'];
-     header('location:dashboard.php');
+      $_SESSION['contactno']=$contactno;
+      $_SESSION['email']=$email;
+     header('location:reset-password.php');
     }
     else{
-    $msg="Invalid Details.";
+      $msg="Invalid Details. Please try again.";
     }
   }
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Soni | Login Page </title>
+<title>Soni | Forgot Page </title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -55,9 +57,8 @@ if(isset($_POST['login']))
 	<div class="main-content">
 		
 		<!-- main content start-->
-		<div style="background-color: #F1F1F1; height:800px;">
-			<div class="main-page login-page ">
-				<h3 class="title1">SignIn Page</h3>
+		<div style="background-color: #F1F1F1; height:800px;">			<div class="main-page login-page ">
+				<h3 class="title1">Forgot Page</h3>
 				<div class="widget-shadow">
 					<div class="login-top">
 						<h4>Welcome back to Soni AdminPanel ! </h4>
@@ -67,20 +68,15 @@ if(isset($_POST['login']))
 							<p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
-							<input type="text" class="user" name="username" placeholder="Username" required="true">
-							<input type="password" name="password" class="lock" placeholder="Password" required="true">
-							<input type="submit" name="login" value="Sign In">
+							<input type="text" name="email" class="lock" placeholder="Email" required="true">
+							
+							<input type="text" name="contactno" class="lock" placeholder="Mobile Number" required="true" maxlength="10" pattern="[0-9]+">
+							
+							<input type="submit" name="submit" value="Reset">
 							<div class="forgot-grid">
 								
 								<div class="forgot">
-									<a href="../index.php">Back to Home</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="forgot-password.php">forgot password?</a>
+									<a href="index.php">Already have an account</a>
 								</div>
 								<div class="clearfix"> </div>
 							</div>

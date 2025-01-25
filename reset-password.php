@@ -2,26 +2,27 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+error_reporting(0);
 
-if(isset($_POST['login']))
+if(isset($_POST['submit']))
   {
-    $adminuser=$_POST['username'];
-    $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
-    $ret=mysqli_fetch_array($query);
-    if($ret>0){
-      $_SESSION['bpmsaid']=$ret['ID'];
-     header('location:dashboard.php');
-    }
-    else{
-    $msg="Invalid Details.";
-    }
+    $contactno=$_SESSION['contactno'];
+    $email=$_SESSION['email'];
+    $password=md5($_POST['newpassword']);
+
+        $query=mysqli_query($con,"update tbladmin set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
+   if($query)
+   {
+echo "<script>alert('Password successfully changed');</script>";
+session_destroy();
+   }
+  
   }
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Soni | Login Page </title>
+<title>Soni | Reset Page </title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -50,6 +51,19 @@ if(isset($_POST['login']))
 <script src="js/custom.js"></script>
 <link href="css/custom.css" rel="stylesheet">
 <!--//Metis Menu -->
+<script type="text/javascript">
+function checkpass()
+{
+if(document.changepassword.newpassword.value!=document.changepassword.confirmpassword.value)
+{
+alert('New Password and Confirm Password field does not match');
+document.changepassword.confirmpassword.focus();
+return false;
+}
+return true;
+} 
+
+</script>
 </head> 
 <body class="cbp-spmenu-push">
 	<div class="main-content">
@@ -57,30 +71,25 @@ if(isset($_POST['login']))
 		<!-- main content start-->
 		<div style="background-color: #F1F1F1; height:800px;">
 			<div class="main-page login-page ">
-				<h3 class="title1">SignIn Page</h3>
+				<h3 class="title1">Reset Page</h3>
 				<div class="widget-shadow">
 					<div class="login-top">
 						<h4>Welcome back to Soni AdminPanel ! </h4>
 					</div>
 					<div class="login-body">
-						<form role="form" method="post" action="">
+						<form role="form" method="post" action="" name="changepassword" onsubmit="return checkpass();">
 							<p style="font-size:16px; color:red" align="center"> <?php if($msg){
     echo $msg;
   }  ?> </p>
-							<input type="text" class="user" name="username" placeholder="Username" required="true">
-							<input type="password" name="password" class="lock" placeholder="Password" required="true">
-							<input type="submit" name="login" value="Sign In">
+							<input type="password" name="newpassword" class="lock" placeholder="New Password" required="true">
+							
+							<input type="password" name="confirmpassword" class="lock" placeholder="Confirm Password" required="true">
+							
+							<input type="submit" name="submit" value="Reset">
 							<div class="forgot-grid">
 								
 								<div class="forgot">
-									<a href="../index.php">Back to Home</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="forgot-password.php">forgot password?</a>
+									<a href="index.php">Already have an account</a>
 								</div>
 								<div class="clearfix"> </div>
 							</div>
